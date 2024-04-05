@@ -1,7 +1,9 @@
+require('dotenv').config();
 const { createConnection } = require('typeorm');
 const  {Requester} = require('../entities/Requester');
 const  {Approver}  = require('../entities/Approver');
 const  {Request}  = require('../entities/Request');
+
 
 async function initializeDb() {
     try {

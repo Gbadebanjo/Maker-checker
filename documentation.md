@@ -3,6 +3,8 @@ This application is built using Express.js, pg (node-postgres), and TypeORM. Exp
 
 This application manages requests and approvers using a database. It includes several functions to create requesters, approvers, and requests, and to approve requests and check if they are expired.
 
+## Installations
+Ensure you have PostgreSQL running on your machine to access database.
 
 ## Getting Started
 
@@ -41,4 +43,4 @@ This function approves a request if the approver is valid. It takes a request an
 This function checks if a request is expired. It takes a request as a parameter and returns `true` if the request's expiration date is in the past, and `false` otherwise.
 
 
-N.b => Environmental variables were not created to ensure easy access to resource.
+N.b => Environmental variables were not added to ensure easy testing and access to resource but it was initially implemented and removed.

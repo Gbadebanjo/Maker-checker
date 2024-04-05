@@ -72,4 +72,4 @@ async function main() {
 }
 
 main().catch(error => console.error(error));
-module.exports = { createRequester, createApprover, createRequest, approveRequest, isExpired };
+module.exports = { createRequester, createApprover, createRequest, approveRequest, isExpired }
