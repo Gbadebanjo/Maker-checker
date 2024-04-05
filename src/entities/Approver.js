@@ -1,10 +1,22 @@
 
-class Approver {
-    constructor() {
-        this.id = undefined;
-        this.name = undefined;
-        this.allowedTypes = [];
+const { EntitySchema } = require('typeorm');
+
+const Approver = new EntitySchema({
+    name: 'Approver',
+    columns: {
+        id: {
+            type: 'int',
+            primary: true,
+            generated: true
+        },
+        approverName: {
+            type: 'text'
+        },
+        allowedTypes: {
+            type: 'simple-array'
+        }
     }
-}
+});
+
 
 module.exports = { Approver };

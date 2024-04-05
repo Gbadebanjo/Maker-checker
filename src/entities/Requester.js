@@ -1,9 +1,18 @@
 
-class Requester {
-    constructor() {
-        this.id = undefined;
-        this.name = undefined;
-    }
-}
+const { EntitySchema } = require('typeorm');
 
-module.exports = { Requester };
+const Requester = new EntitySchema({
+    name: 'Requester',
+    columns: {
+        id: {
+            type: 'int',
+            primary: true,
+            generated: true
+        },
+        name: {
+            type: 'text'
+        }
+    }
+});
+
+module.exports = { Requester }  ;

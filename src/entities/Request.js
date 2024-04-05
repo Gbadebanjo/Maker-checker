@@ -1,12 +1,27 @@
-const { Requester } = require('./Requester');
+const { EntitySchema } = require('typeorm');
 
-class Request {
-    constructor() {
-        this.id = undefined;
-        this.requester = undefined;
-        this.type = undefined;
-        this.expirationDate = undefined;
+const Request = new EntitySchema({
+    name: 'Request',
+    columns: {
+        id: {
+            type: 'int',
+            primary: true,
+            generated: true
+        },
+        type: {
+            type: 'text'
+        },
+        expirationDate: {
+            type: 'date'
+        }
+    },
+    relations: {
+        requester: {
+            target: 'Requester',
+            type: 'many-to-one',
+            joinColumn: true
+        }
     }
-}
+});
 
 module.exports = { Request };

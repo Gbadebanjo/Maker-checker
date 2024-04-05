@@ -4,57 +4,72 @@ const { Approver } = require('./entities/Approver');
 const { initializeDb } = require('./services/dbService');
 const { approveRequest, isExpired } = require('./services/requestService');
 
+// createApprover function to create approver in the database
+async function createApprover(connection, id, approverName, allowedTypes) {
+    const approverRepo = connection.getRepository(Approver);
+    const approver = approverRepo.create();
+    approver.id = id;
+    approver.approverName = approverName;
+    approver.allowedTypes = allowedTypes;
+    await approverRepo.save(approver);
+    return approver;
+}
+
+// createRequest function to create request in the database
+async function createRequest(connection, id, requester, type, expirationDate) {
+    const requestRepo = connection.getRepository(Request);
+    const request = requestRepo.create();
+    request.id = id;
+    request.requester = requester;
+    request.type = type;
+    request.expirationDate = expirationDate;
+    await requestRepo.save(request);
+    return request;
+}
+
+// createRequester function to create requester in the database
+async function createRequester(connection, name) {
+    const requesterRepo = connection.getRepository(Requester);
+    const requester = requesterRepo.create();
+    requester.name = name;
+    await requesterRepo.save(requester);
+    return requester;
+}
+
+
 async function main() {
     // database connection
     const connection = await initializeDb();
 
     // Requester
-    const requester = new Requester();
-    requester.name = 'John Doe';
+    const requester = await createRequester(connection, 'John Doe');
 
 
     // Approvers
-    const approverA = new Approver();
-    approverA.name = 'Approver A';
-    approverA.allowedTypes = ['A'];
-
-    const approverB = new Approver();
-    approverB.name = 'Approver B';
-    approverB.allowedTypes = ['A'];
-
-    const approverC = new Approver();
-    approverC.name = 'Approver C';
-    approverC.allowedTypes = ['A', 'B'];
+    const approverA = await createApprover(connection, 1, 'Approver A', ['']);
+    const approverB = await createApprover(connection, 2, 'Approver B', ['A']);
+    const approverC = await createApprover(connection, 3, 'Approver C', ['A', 'B']);
 
 
     // Requests
-    const requestA = new Request();
-    requestA.requester = requester;
-    requestA.type = 'A';
-    requestA.expirationDate = new Date('2024-04-06');
+    const requestA = await createRequest(connection, 101, requester, 'A', new Date('2024-04-15'));
+    const requestB = await createRequest(connection, 102, requester, 'B', new Date('2024-04-10'));
+    const requestC = await createRequest(connection, 103, requester, 'C', new Date('2024-04-04'));
 
-    const requestB = new Request();
-    requestB.requester = requester;
-    requestB.type = 'B';
-    requestB.expirationDate = new Date('2024-04-06');
-
-    const requestC = new Request();
-    requestC.requester = requester;
-    requestC.type = 'C';
-    requestC.expirationDate = new Date('2024-04-06');
 
     // Request approval
-    console.log(approveRequest(requestA, approverA)); // Should fail
+    console.log(approveRequest(requestC, approverA)); // Should fail
     console.log(approveRequest(requestA, approverB)); // Should pass
-    console.log(approveRequest(requestA, approverC)); // Should pass
+    console.log(approveRequest(requestB, approverC)); // Should pass
 
 
     console.log(isExpired(requestA)); // Should be false
     console.log(isExpired(requestB)); // Should be false
-     console.log(isExpired(requestC)); // Should be false
+     console.log(isExpired(requestC)); // Should be true
 
      // Close DB connection
     await connection.close();
 }
 
 main().catch(error => console.error(error));
+module.exports = { createRequester, createApprover, createRequest, approveRequest, isExpired };
